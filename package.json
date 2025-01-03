@@ -1,7 +1,7 @@
 {
-  "name": "antd",
-  "version": "5.22.7",
-  "description": "An enterprise-class UI design language and React components implementation",
+  "name": "giteed",
+  "version": "5.22.7000",
+  "description": "An enterprise-class UI design language and React components implementation, powered by Ant Design.",
   "license": "MIT",
   "funding": {
     "type": "opencollective",
@@ -10,10 +10,10 @@
   "homepage": "https://ant.design",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ant-design/ant-design"
+    "url": "https://github.com/knight174/gitee-design"
   },
   "bugs": {
-    "url": "https://github.com/ant-design/ant-design/issues"
+    "url": "https://github.com/knight174/ant-design/issues"
   },
   "keywords": [
     "ant",

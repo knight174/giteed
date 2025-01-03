@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: 0 */
 // This config is for building dist files
-const getWebpackConfig = require('@ant-design/tools/lib/getWebpackConfig');
+const getWebpackConfig = require('@gitee-design/tools/lib/getWebpackConfig');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { codecovWebpackPlugin } = require('@codecov/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -9,8 +9,8 @@ const path = require('path');
 
 function addLocales(config) {
   const newConfig = { ...config }; // Avoid mutating the original config
-  let packageName = 'antd-with-locales';
-  if (newConfig.entry['antd.min']) {
+  let packageName = 'giteed-with-locales';
+  if (newConfig.entry['giteed.min']) {
     packageName += '.min';
   }
   newConfig.entry[packageName] = './index-with-locales.js';
@@ -33,7 +33,7 @@ function externalCssinjs(config) {
   const newConfig = { ...config }; // Shallow copy for safety
   newConfig.resolve = newConfig.resolve || {};
   newConfig.resolve.alias = newConfig.resolve.alias || {};
-  newConfig.resolve.alias['@ant-design/cssinjs'] = path.resolve(__dirname, 'alias/cssinjs');
+  newConfig.resolve.alias['@gitee-design/cssinjs'] = path.resolve(__dirname, 'alias/cssinjs');
   return newConfig;
 }
 
@@ -60,7 +60,7 @@ function addPluginsForProduction(config) {
   newConfig.plugins.push(
     codecovWebpackPlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-      bundleName: 'antd.min',
+      bundleName: 'giteed.min',
       uploadToken: process.env.CODECOV_TOKEN,
     }),
     new CircularDependencyPlugin({
