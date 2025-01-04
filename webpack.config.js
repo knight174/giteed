@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: 0 */
 // This config is for building dist files
-const getWebpackConfig = require('@gitee-design/tools/lib/getWebpackConfig');
+const getWebpackConfig = require('@ant-design/tools/lib/getWebpackConfig');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { codecovWebpackPlugin } = require('@codecov/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -33,7 +33,7 @@ function externalCssinjs(config) {
   const newConfig = { ...config }; // Shallow copy for safety
   newConfig.resolve = newConfig.resolve || {};
   newConfig.resolve.alias = newConfig.resolve.alias || {};
-  newConfig.resolve.alias['@gitee-design/cssinjs'] = path.resolve(__dirname, 'alias/cssinjs');
+  newConfig.resolve.alias['@ant-design/cssinjs'] = path.resolve(__dirname, 'alias/cssinjs');
   return newConfig;
 }
 
