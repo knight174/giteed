@@ -17,14 +17,21 @@ function exitProcess(code = 1) {
 
 async function checkVersion() {
   spinner.start('正在检查当前版本是否已经存在');
-  const { versions } = await fetch('http://registry.npmjs.org/antd').then((res: Response) =>
+  const { versions } = await fetch('http://registry.npmjs.org/giteed').then((res: Response) =>
     res.json(),
   );
-  if (version in versions) {
-    spinner.fail(chalk.yellow('😈 Current version already exists. Forget update package.json?'));
-    spinner.info(`${chalk.cyan(' => Current:')}: version`);
-    exitProcess();
+
+  // 如果版本不存在 首次发布
+  if (!versions) {
+    spinner.succeed(`首次发布 🎉 ${chalk.cyan(' => Current:')}: version`);
+  } else {
+    if (version in versions) {
+      spinner.fail(chalk.yellow('😈 Current version already exists. Forget update package.json?'));
+      spinner.info(`${chalk.cyan(' => Current:')}: version`);
+      exitProcess();
+    }
   }
+
   spinner.succeed('版本检查通过');
 }
 
@@ -37,33 +44,33 @@ async function checkBranch({ current }: StatusResult) {
     version.includes('-experimental.')
   ) {
     spinner.info(chalk.cyan('😃 Alpha version. Skip branch check.'));
-  } else if (current !== 'master') {
+  } else if (current !== 'master' && current !== 'main') {
     spinner.fail(chalk.red('🤔 You are not in the master branch!'));
     exitProcess();
   }
   spinner.succeed('分支检查通过');
 }
 
-async function checkCommit({ files }: StatusResult) {
-  spinner.start('正在检查当前 git 状态');
-  if (files.length) {
-    spinner.fail(chalk.red('🙄 You forgot something to commit.'));
-    files.forEach(({ path: filePath, working_dir: mark }) => {
-      console.log(' -', chalk.red(mark), filePath);
-    });
-    exitProcess();
-  }
-  spinner.succeed('git 状态检查通过');
-}
+// async function checkCommit({ files }: StatusResult) {
+//   spinner.start('正在检查当前 git 状态');
+//   if (files.length) {
+//     spinner.fail(chalk.red('🙄 You forgot something to commit.'));
+//     files.forEach(({ path: filePath, working_dir: mark }) => {
+//       console.log(' -', chalk.red(mark), filePath);
+//     });
+//     exitProcess();
+//   }
+//   spinner.succeed('git 状态检查通过');
+// }
 
-async function checkRemote() {
+async function checkRemote(tunkname: 'master' | 'main') {
   spinner.start('正在检查远程分支');
-  const { remote } = await git.fetch('origin', 'master');
-  if (!remote?.includes('ant-design/ant-design')) {
+  const { remote } = await git.fetch('origin', tunkname);
+  if (!remote?.includes('knight174/giteed')) {
     const { value } = await git.getConfig('remote.origin.url');
-    if (!value?.includes('ant-design/ant-design')) {
+    if (!value?.includes('knight174/giteed')) {
       spinner.fail(
-        chalk.red('🧐 Your remote origin is not ant-design/ant-design, did you fork it?'),
+        chalk.red('🧐 Your remote origin is not knight174/giteed, did you fork it?'),
       );
       exitProcess();
     }
@@ -71,25 +78,25 @@ async function checkRemote() {
   spinner.succeed('远程分支检查通过');
 }
 
-async function checkToken() {
-  if (!process.env.GITHUB_ACCESS_TOKEN) {
-    console.log(
-      spinner.fail(
-        chalk.red(
-          '🚨 请先设置 GITHUB_ACCESS_TOKEN 环境变量到本地，请不要泄露给任何在线页面: https://octokit.github.io/rest.js/v20#authentication',
-        ),
-      ),
-    );
-    exitProcess();
-  }
-  spinner.succeed('GITHUB_ACCESS_TOKEN 检查通过');
-}
+// async function checkToken() {
+//   if (!process.env.GITHUB_ACCESS_TOKEN) {
+//     console.log(
+//       spinner.fail(
+//         chalk.red(
+//           '🚨 请先设置 GITHUB_ACCESS_TOKEN 环境变量到本地，请不要泄露给任何在线页面: https://octokit.github.io/rest.js/v20#authentication',
+//         ),
+//       ),
+//     );
+//     exitProcess();
+//   }
+//   spinner.succeed('GITHUB_ACCESS_TOKEN 检查通过');
+// }
 
 export default async function checkRepo() {
   const status = await git.status();
   await checkVersion();
   await checkBranch(status);
-  await checkCommit(status);
-  await checkRemote();
-  await checkToken();
+  // await checkCommit(status);
+  await checkRemote('main');
+  // await checkToken();
 }

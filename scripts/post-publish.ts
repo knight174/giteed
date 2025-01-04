@@ -39,15 +39,16 @@ const SAFE_DAYS_DIFF = 1000 * 60 * 60 * 24 * 3; // 3 days not update seems to be
   execSync(`git push origin ${packageVersion}:${packageVersion}`);
   spinner.succeed(
     chalk.cyan(
-      `Tagged ${packageVersion} 📦: https://github.com/ant-design/ant-design/releases/tag/${packageVersion}`,
+      `Tagged ${packageVersion} 📦: https://github.com/knight174/giteed/releases/tag/${packageVersion}`,
     ),
   );
-  console.log();
+  // console.log();
 
-  const { time, 'dist-tags': distTags } = await fetch('http://registry.npmjs.org/antd').then(
+  const { time, 'dist-tags': distTags } = await fetch('https://registry.npmjs.org/giteed').then(
     (res: Response) => res.json(),
   );
 
+  const conchTagVersion = distTags[CONCH_TAG] || 'null';
   console.log('🐚 Latest Conch Version:', chalk.green(distTags[CONCH_TAG] || 'null'), '\n');
 
   // Sort and get the latest versions
@@ -59,6 +60,8 @@ const SAFE_DAYS_DIFF = 1000 * 60 * 60 * 24 * 3; // 3 days not update seems to be
 
       return time2 - time1;
     });
+
+  console.log('versionList', versionList);
 
   // Slice for choosing the latest versions
   const latestVersions = versionList
@@ -101,8 +104,17 @@ const SAFE_DAYS_DIFF = 1000 * 60 * 60 * 24 * 3; // 3 days not update seems to be
   let defaultVersion = defaultVersionObj ? defaultVersionObj.value : null;
 
   // If default version is less than current, use current
-  if (semver.compare(defaultVersion!, distTags[CONCH_TAG]) < 0) {
-    defaultVersion = distTags[CONCH_TAG];
+  // if (semver.compare(defaultVersion!, distTags[CONCH_TAG]) < 0) {
+  //   defaultVersion = distTags[CONCH_TAG];
+  // }
+  console.log('conchTagVersion', conchTagVersion);
+  if (
+    conchTagVersion !== 'null' &&
+    semver.valid(conchTagVersion) &&
+    semver.valid(defaultVersion) &&
+    semver.compare(defaultVersion!, conchTagVersion) < 0
+  ) {
+    defaultVersion = conchTagVersion;
   }
 
   let conchVersion = await select({
@@ -156,6 +168,8 @@ const SAFE_DAYS_DIFF = 1000 * 60 * 60 * 24 * 3; // 3 days not update seems to be
     console.log(`🎃 Conch Version not change. Safe to ${chalk.green('ignore')}.`);
   } else {
     console.log('💾 Tagging Conch Version:', chalk.green(conchVersion));
-    spawnSync('npm', ['dist-tag', 'add', `antd@${conchVersion}`, CONCH_TAG], { stdio: 'inherit' });
+    spawnSync('npm', ['dist-tag', 'add', `giteed@${conchVersion}`, CONCH_TAG], {
+      stdio: 'inherit',
+    });
   }
 })();
