@@ -44,7 +44,7 @@ async function checkBranch({ current }: StatusResult) {
     version.includes('-experimental.')
   ) {
     spinner.info(chalk.cyan('😃 Alpha version. Skip branch check.'));
-  } else if (current !== 'master' && current !== 'main') {
+  } else if (current !== 'master' && current !== 'main' && current !== 'publish') {
     spinner.fail(chalk.red('🤔 You are not in the master branch!'));
     exitProcess();
   }
@@ -69,9 +69,7 @@ async function checkRemote(tunkname: 'master' | 'main') {
   if (!remote?.includes('knight174/giteed')) {
     const { value } = await git.getConfig('remote.origin.url');
     if (!value?.includes('knight174/giteed')) {
-      spinner.fail(
-        chalk.red('🧐 Your remote origin is not knight174/giteed, did you fork it?'),
-      );
+      spinner.fail(chalk.red('🧐 Your remote origin is not knight174/giteed, did you fork it?'));
       exitProcess();
     }
   }
