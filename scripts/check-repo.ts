@@ -95,6 +95,6 @@ export default async function checkRepo() {
   await checkVersion();
   await checkBranch(status);
   // await checkCommit(status);
-  await checkRemote('main');
+  await checkRemote('publish');
   // await checkToken();
 }
