@@ -63,7 +63,7 @@ async function checkBranch({ current }: StatusResult) {
 //   spinner.succeed('git 状态检查通过');
 // }
 
-async function checkRemote(tunkname: 'master' | 'main') {
+async function checkRemote(tunkname: 'master' | 'main' | 'publish') {
   spinner.start('正在检查远程分支');
   const { remote } = await git.fetch('origin', tunkname);
   if (!remote?.includes('knight174/giteed')) {
