@@ -48,7 +48,7 @@ const SAFE_DAYS_DIFF = 1000 * 60 * 60 * 24 * 3; // 3 days not update seems to be
     (res: Response) => res.json(),
   );
 
-  const conchTagVersion = distTags[CONCH_TAG] || 'null';
+  const conchTagVersion = distTags?.CONCH_TAG || 'null';
   console.log('🐚 Latest Conch Version:', chalk.green(distTags[CONCH_TAG] || 'null'), '\n');
 
   // Sort and get the latest versions

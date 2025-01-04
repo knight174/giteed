@@ -1,8 +1,8 @@
-import fs from 'node:fs';
+// import fs from 'node:fs';
 import runScript from '@npmcli/run-script';
-import { Octokit } from '@octokit/rest';
-import AdmZip from 'adm-zip';
-import axios from 'axios';
+// import { Octokit } from '@octokit/rest';
+// import AdmZip from 'adm-zip';
+// import axios from 'axios';
 import chalk from 'chalk';
 import dotnev from 'dotenv';
 import Spinnies from 'spinnies';
@@ -14,12 +14,12 @@ dotnev.config({ override: true });
 const { Notification: Notifier } = require('node-notifier');
 const simpleGit = require('simple-git');
 
-const blockStatus = ['failure', 'cancelled', 'timed_out'] as const;
+// const blockStatus = ['failure', 'cancelled', 'timed_out'] as const;
 
 const spinner = { interval: 80, frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'] };
 const spinnies = new Spinnies({ spinner });
 
-const IGNORE_ACTIONS = ['Check Virtual Regression Approval', 'issue-remove-inactive'];
+// const IGNORE_ACTIONS = ['Check Virtual Regression Approval', 'issue-remove-inactive'];
 
 let spinniesId = 0;
 
@@ -118,7 +118,7 @@ process.on('SIGINT', () => {
 
 const runPrePublish = async () => {
   await checkRepo();
-  showMessage(chalk.black.bgGreenBright('本次发布将跳过本地 CI 检查，远程 CI 通过后方可发布'));
+  // showMessage(chalk.black.bgGreenBright('本次发布将跳过本地 CI 检查，远程 CI 通过后方可发布'));
   const git = simpleGit();
   // const octokit = new Octokit({ auth: process.env.GITHUB_ACCESS_TOKEN });
   const { current: currentBranch } = await git.branch();
@@ -199,7 +199,7 @@ const runPrePublish = async () => {
   await runScript({
     event: 'dist',
     path: '.',
-    stdio: 'inherit'
+    stdio: 'inherit',
   });
   showMessage('打包完成', 'succeed');
 
